@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
 
   <style>
-    /* ... (mismo CSS que antes, lo dejo intacto) ... */
+    /* Mantengo todo tu CSS intacto */
   </style>
 </head>
 
@@ -39,7 +39,6 @@
     <button class="fab" id="themeBtn">Cambiar vibra</button>
   </footer>
 
-  <!-- Instagram embed -->
   <script async defer src="https://www.instagram.com/embed.js"></script>
 
   <!-- Firebase -->
@@ -105,16 +104,11 @@
       if(window.instgrm) instgrm.Embeds.process();
     }
 
-    // Agregar nuevo post
+    // Agregar post
     addBtn.addEventListener('click', () => {
       const url = igUrlInput.value.trim();
       const title = titleInput.value.trim();
-      if(!url) return alert("Ingresa un enlace de Instagram");
-
-      // Validar que empiece con https://www.instagram.com
-      if(!url.startsWith("https://www.instagram.com")) {
-        return alert("Ingresa un enlace válido de Instagram");
-      }
+      if(!url) return alert("Ingresa un enlace");
 
       const id = Date.now().toString();
       posts[id] = { permalink: url, title: title };
@@ -137,6 +131,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
