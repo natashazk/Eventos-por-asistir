@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
 
   <style>
-    /* Mantengo todo tu CSS intacto */
+    /* Mantengo tu CSS intacto */
   </style>
 </head>
 
@@ -77,7 +77,7 @@
       db.ref('posts').set(posts);
     }
 
-    // Renderizar posts
+    // Renderizar posts con placeholder rápido
     function renderPosts() {
       grid.innerHTML = '';
       const keys = Object.keys(posts);
@@ -93,15 +93,26 @@
         card.className = 'card';
         card.dataset.permalink = post.permalink;
 
+        // Placeholder mientras carga la embed
         card.innerHTML = `
           <h3 class="title">${post.title || 'Sin título'}</h3>
-          <blockquote class="instagram-media" data-instgrm-permalink="${post.permalink}" data-instgrm-version="14"></blockquote>
+          <div class="placeholder" style="height:400px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#999;font-style:italic;">
+            Cargando publicación...
+          </div>
           <button class="delete-btn" data-id="${key}">Eliminar</button>
         `;
         grid.appendChild(card);
-      });
 
-      if(window.instgrm) instgrm.Embeds.process();
+        // Renderizar embed de Instagram después de añadir el placeholder
+        const blockquote = document.createElement('blockquote');
+        blockquote.className = 'instagram-media';
+        blockquote.setAttribute('data-instgrm-permalink', post.permalink);
+        blockquote.setAttribute('data-instgrm-version', '14');
+
+        card.insertBefore(blockquote, card.querySelector('.delete-btn'));
+
+        if(window.instgrm) instgrm.Embeds.process();
+      });
     }
 
     // Agregar post
@@ -131,6 +142,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
