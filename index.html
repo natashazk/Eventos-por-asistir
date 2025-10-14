@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Panoramas</title>
- 
+
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
 
   <style>
@@ -27,6 +27,7 @@
       margin: 0;
       padding: 0;
       text-align: center;
+      text-transform: none;
     }
 
     header {
@@ -112,21 +113,9 @@
       box-shadow: 0 18px 40px rgba(0,0,0,0.08);
     }
 
-    .meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
     .meta .title {
       font-weight: 600;
       color: #133642;
-    }
-
-    .meta .note {
-      color: var(--muted);
-      font-size: 13px;
     }
 
     .small-note {
@@ -211,14 +200,73 @@
   <script>
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
+    const addBtn = document.getElementById('addBtn');
+    const igUrlInput = document.getElementById('igUrl');
+    const titleInput = document.getElementById('titleInput');
 
+    // Cargar posts desde localStorage
+    let posts = JSON.parse(localStorage.getItem('posts') || '[]');
+
+    function renderPosts() {
+      grid.innerHTML = '';
+      if(posts.length === 0){
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      posts.forEach((post, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.permalink = post.permalink;
+
+        card.innerHTML = `
+          <h3 class="title">${post.title || 'Sin título'}</h3>
+          <blockquote class="instagram-media" data-instgrm-permalink="${post.permalink}" data-instgrm-version="14"></blockquote>
+          <button class="delete-btn" data-index="${index}">Eliminar</button>
+        `;
+        grid.appendChild(card);
+      });
+
+      // Renderiza embeds de Instagram
+      if(window.instgrm) instgrm.Embeds.process();
+    }
+
+    // Guardar posts en localStorage
     function savePosts() {
-      const cards = [...grid.children].map(card => ({
-        permalink: card.dataset.permalink,
-        title: card.querySelector('.title').textContent,
-        note: card.querySelector('.small-note').innerText
-      }));
-      localStorage
+      localStorage.setItem('posts', JSON.stringify(posts));
+    }
+
+    // Agregar nuevo post
+    addBtn.addEventListener('click', () => {
+      const url = igUrlInput.value.trim();
+      const title = titleInput.value.trim();
+      if(!url) return alert("Ingresa un enlace de Instagram");
+
+      posts.push({ permalink: url, title: title });
+      savePosts();
+      renderPosts();
+
+      igUrlInput.value = '';
+      titleInput.value = '';
+    });
+
+    // Eliminar post
+    grid.addEventListener('click', e => {
+      if(e.target.classList.contains('delete-btn')){
+        const index = e.target.dataset.index;
+        posts.splice(index, 1);
+        savePosts();
+        renderPosts();
+      }
+    });
+
+    renderPosts();
+  </script>
+</body>
+</html>
+
+
 
 
 
