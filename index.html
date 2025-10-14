@@ -199,6 +199,11 @@
   </footer>
 
   <script async defer src="https://www.instagram.com/embed.js"></script>
+
+  <!-- Firebase Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <script>
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
@@ -206,37 +211,33 @@
     const igUrlInput = document.getElementById('igUrl');
     const titleInput = document.getElementById('titleInput');
 
-    // Cargar posts desde localStorage
-    let posts = JSON.parse(localStorage.getItem('posts') || '[]');
+    // Inicializar Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDJm3eRdd2gZe6eWBpb2AtcK1B654p-pts",
+      authDomain: "mis-panoramas.firebaseapp.com",
+      databaseURL: "https://mis-panoramas-default-rtdb.firebaseio.com",
+      projectId: "mis-panoramas",
+      storageBucket: "mis-panoramas.firebasestorage.app",
+      messagingSenderId: "141101164885",
+      appId: "1:141101164885:web:2d9fdb180394ee1b1667dc"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    function renderPosts() {
-      grid.innerHTML = '';
-      if(posts.length === 0){
-        empty.style.display = 'block';
-        return;
-      }
-      empty.style.display = 'none';
+    // Leer posts desde Firebase
+    let posts = [];
+    db.ref('posts').on('value', snapshot => {
+      posts = snapshot.val() ? Object.values(snapshot.val()) : [];
+      renderPosts();
+    });
 
-      posts.forEach((post, index) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.permalink = post.permalink;
-
-        card.innerHTML = `
-          <h3 class="title">${post.title || 'Sin título'}</h3>
-          <blockquote class="instagram-media" data-instgrm-permalink="${post.permalink}" data-instgrm-version="14"></blockquote>
-          <button class="delete-btn" data-index="${index}">Eliminar</button>
-        `;
-        grid.appendChild(card);
-      });
-
-      // Renderiza embeds de Instagram
-      if(window.instgrm) instgrm.Embeds.process();
-    }
-
-    // Guardar posts en localStorage
+    // Guardar posts en Firebase
     function savePosts() {
-      localStorage.setItem('posts', JSON.stringify(posts));
+      const updates = {};
+      posts.forEach((post, index) => {
+        updates[index] = post;
+      });
+      db.ref('posts').set(updates);
     }
 
     // Agregar nuevo post
@@ -263,10 +264,35 @@
       }
     });
 
-    renderPosts();
+    // Renderizar posts
+    function renderPosts() {
+      grid.innerHTML = '';
+      if(posts.length === 0){
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      posts.forEach((post, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.permalink = post.permalink;
+
+        card.innerHTML = `
+          <h3 class="title">${post.title || 'Sin título'}</h3>
+          <blockquote class="instagram-media" data-instgrm-permalink="${post.permalink}" data-instgrm-version="14"></blockquote>
+          <button class="delete-btn" data-index="${index}">Eliminar</button>
+        `;
+        grid.appendChild(card);
+      });
+
+      if(window.instgrm) instgrm.Embeds.process();
+    }
   </script>
 </body>
 </html>
+
+
 
 
 
