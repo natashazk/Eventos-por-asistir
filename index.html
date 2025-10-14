@@ -1,65 +1,50 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mis Panoramas</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eventos por asistir</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --sand: #f6efe6;
       --sea: #bfeaf5;
       --accent: #ff7b6b;
-      --muted: #5f7d83;
-      --card: rgba(255,255,255,0.8);
+      --muted: #7a7a7a;
+      --card: #ffffff;
     }
-
-    body {
-      font-family: 'Times New Roman', Times, serif;
-      background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      color: black;
-      text-shadow: 0 1px 4px rgba(255,255,255,0.7);
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
       margin: 0;
-      padding: 0;
-      text-align: center;
-      text-transform: none;
+      font-family: Inter, system-ui, Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, var(--sand), #eef9ff 60%);
+      color: #203041;
     }
-
     header {
+      padding: 28px 24px 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #9fe3e3, #ffecd1);
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      padding: 20px;
-      gap: 6px;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(5px);
-      border-bottom: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 6px 18px rgba(30,80,80,0.08);
     }
-
-    .logo svg {
-      width: 60px;
-      height: 60px;
-    }
-
+    .logo svg { width: 38px; height: 38px; }
     h1 {
-      font-size: 2.6em;
-      color: black;
+      font-family: Pacifico, cursive;
       margin: 0;
-      letter-spacing: 1px;
+      font-size: 28px;
+      color: #144d5b;
     }
-
-    p.subtitle {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-      font-style: italic;
-    }
+    p.subtitle { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
 
     .controls {
       padding: 12px 24px;
@@ -67,38 +52,18 @@
       gap: 12px;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: center;
     }
-
     .input, .btn {
       padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid rgba(20,60,70,0.08);
       background: rgba(255,255,255,0.9);
-      font-family: inherit;
     }
+    .input { min-width: 260px; flex: 1; }
+    .btn { cursor: pointer; background: linear-gradient(90deg,var(--sea),#fff); border: none; }
 
-    .input {
-      min-width: 260px;
-      flex: 1;
-    }
-
-    .btn {
-      cursor: pointer;
-      background: linear-gradient(90deg, var(--sea), #fff);
-      border: none;
-    }
-
-    main {
-      padding: 18px 24px 80px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 18px;
-    }
-
+    main { padding: 18px 24px 80px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap: 18px; }
     .card {
       background: var(--card);
       border-radius: 14px;
@@ -107,23 +72,14 @@
       transition: transform .18s ease, box-shadow .18s ease;
       position: relative;
     }
-
     .card:hover {
       transform: translateY(-6px);
       box-shadow: 0 18px 40px rgba(0,0,0,0.08);
     }
-
-    .meta .title {
-      font-weight: 600;
-      color: #133642;
-    }
-
-    .small-note {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #354b52;
-    }
-
+    .meta { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .meta .title { font-weight: 600; color: #133642; }
+    .meta .note { color: var(--muted); font-size: 13px; }
+    .small-note { margin-top: 8px; font-size: 14px; color: #354b52; }
     .delete-btn {
       position: absolute;
       top: 10px;
@@ -137,18 +93,9 @@
       font-size: 12px;
     }
 
-    .empty {
-      padding: 48px;
-      text-align: center;
-      color: var(--muted);
-    }
+    .empty { padding: 48px; text-align: center; color: var(--muted); }
 
-    footer {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-    }
-
+    footer { position: fixed; right: 18px; bottom: 18px; }
     .fab {
       background: var(--accent);
       color: white;
@@ -159,17 +106,11 @@
       cursor: pointer;
     }
 
-    blockquote.instagram-media {
-      width: 100% !important;
-    }
+    blockquote.instagram-media { width: 100% !important; }
 
-    @media (max-width:420px){
-      h1{font-size:22px}
-      .logo svg{width:48px;height:48px}
-    }
+    @media (max-width:420px){ h1{font-size:22px}.logo{width:48px;height:48px} }
   </style>
 </head>
-
 <body>
   <header>
     <div class="logo" aria-hidden>
@@ -177,7 +118,7 @@
     </div>
     <div>
       <h1>Eventos por asistir</h1>
-      <p class="subtitle">Un diario visual de mis panoramas 🌴✨</p>
+      <p class="subtitle">Un diario visual con vibra de playa — guarda posts de Instagram o tus propias fotos.</p>
     </div>
   </header>
 
@@ -200,71 +141,115 @@
   <script>
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
-    const addBtn = document.getElementById('addBtn');
-    const igUrlInput = document.getElementById('igUrl');
-    const titleInput = document.getElementById('titleInput');
 
-    // Cargar posts desde localStorage
-    let posts = JSON.parse(localStorage.getItem('posts') || '[]');
-
-    function renderPosts() {
-      grid.innerHTML = '';
-      if(posts.length === 0){
-        empty.style.display = 'block';
-        return;
-      }
-      empty.style.display = 'none';
-
-      posts.forEach((post, index) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.permalink = post.permalink;
-
-        card.innerHTML = `
-          <h3 class="title">${post.title || 'Sin título'}</h3>
-          <blockquote class="instagram-media" data-instgrm-permalink="${post.permalink}" data-instgrm-version="14"></blockquote>
-          <button class="delete-btn" data-index="${index}">Eliminar</button>
-        `;
-        grid.appendChild(card);
-      });
-
-      // Renderiza embeds de Instagram
-      if(window.instgrm) instgrm.Embeds.process();
-    }
-
-    // Guardar posts en localStorage
+    // Guardar y cargar desde localStorage
     function savePosts() {
-      localStorage.setItem('posts', JSON.stringify(posts));
+      const cards = [...grid.children].map(card => ({
+        permalink: card.dataset.permalink,
+        title: card.querySelector('.title').textContent,
+        note: card.querySelector('.small-note').innerText
+      }));
+      localStorage.setItem('eventosGuardados', JSON.stringify(cards));
     }
 
-    // Agregar nuevo post
-    addBtn.addEventListener('click', () => {
-      const url = igUrlInput.value.trim();
-      const title = titleInput.value.trim();
-      if(!url) return alert("Ingresa un enlace de Instagram");
+    function loadPosts() {
+      const saved = JSON.parse(localStorage.getItem('eventosGuardados') || '[]');
+      saved.forEach(post => addPost(post.permalink, post.title, post.note));
+    }
 
-      posts.push({ permalink: url, title: title });
+    function createCard(permalink, title = '', note = '') {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.dataset.permalink = permalink;
+
+      const delBtn = document.createElement('button');
+      delBtn.textContent = 'Eliminar';
+      delBtn.className = 'delete-btn';
+      delBtn.onclick = () => { card.remove(); savePosts(); updateEmptyState(); };
+
+      const block = document.createElement('blockquote');
+      block.className = 'instagram-media';
+      block.setAttribute('data-instgrm-permalink', permalink);
+      block.setAttribute('data-instgrm-version', '14');
+      block.style.margin = '0';
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+
+      const titleEl = document.createElement('div');
+      titleEl.className = 'title';
+      titleEl.textContent = title || 'Evento por asistir';
+
+      const noteEl = document.createElement('div');
+      noteEl.className = 'note';
+      noteEl.textContent = '';
+
+      meta.appendChild(titleEl);
+      meta.appendChild(noteEl);
+
+      const smallNote = document.createElement('div');
+      smallNote.className = 'small-note';
+      smallNote.contentEditable = true;
+      smallNote.innerText = note || 'Haz doble clic aquí para escribir una nota personal...';
+      smallNote.addEventListener('input', savePosts);
+
+      card.append(delBtn, block, meta, smallNote);
+      return card;
+    }
+
+    function addPost(permalink, title = '', note = '') {
+      const card = createCard(permalink, title, note);
+      grid.prepend(card);
+      setTimeout(() => {
+        if (window.instgrm && window.instgrm.Embeds && typeof window.instgrm.Embeds.process === 'function') {
+          window.instgrm.Embeds.process();
+        }
+      }, 300);
+      updateEmptyState();
       savePosts();
-      renderPosts();
+    }
 
-      igUrlInput.value = '';
-      titleInput.value = '';
+    function updateEmptyState() {
+      empty.style.display = grid.children.length === 0 ? 'block' : 'none';
+    }
+
+    document.getElementById('addBtn').addEventListener('click', () => {
+      const url = document.getElementById('igUrl').value.trim();
+      const title = document.getElementById('titleInput').value.trim();
+      if (!url) { alert('Pega la URL de la publicación de Instagram.'); return; }
+      addPost(url, title);
+      document.getElementById('igUrl').value = '';
+      document.getElementById('titleInput').value = '';
     });
 
-    // Eliminar post
-    grid.addEventListener('click', e => {
-      if(e.target.classList.contains('delete-btn')){
-        const index = e.target.dataset.index;
-        posts.splice(index, 1);
-        savePosts();
-        renderPosts();
+    // Cambiar vibra (colores)
+    const themeBtn = document.getElementById('themeBtn');
+    let alt = false;
+    themeBtn.addEventListener('click', () => {
+      alt = !alt;
+      if (alt) {
+        document.documentElement.style.setProperty('--sand', '#fff8f0');
+        document.documentElement.style.setProperty('--sea', '#d7f3ef');
+        document.documentElement.style.setProperty('--accent', '#4aa6b4');
+      } else {
+        document.documentElement.style.setProperty('--sand', '#f6efe6');
+        document.documentElement.style.setProperty('--sea', '#bfeaf5');
+        document.documentElement.style.setProperty('--accent', '#ff7b6b');
       }
     });
 
-    renderPosts();
+    // Permitir pegar directamente una URL de Instagram
+    window.addEventListener('paste', e => {
+      const text = (e.clipboardData || window.clipboardData).getData('text');
+      if (text.includes('instagram.com/p/')) document.getElementById('igUrl').value = text;
+    });
+
+    loadPosts();
   </script>
 </body>
 </html>
+
+
 
 
 
