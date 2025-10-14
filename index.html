@@ -200,17 +200,11 @@
 
   <script async defer src="https://www.instagram.com/embed.js"></script>
 
-  <!-- Firebase Realtime Database -->
+  <!-- Firebase y posts -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    const grid = document.getElementById('grid');
-    const empty = document.getElementById('empty');
-    const addBtn = document.getElementById('addBtn');
-    const igUrlInput = document.getElementById('igUrl');
-    const titleInput = document.getElementById('titleInput');
-
     // Inicializar Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDJm3eRdd2gZe6eWBpb2AtcK1B654p-pts",
@@ -223,6 +217,13 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
+    // Variables del DOM
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+    const addBtn = document.getElementById('addBtn');
+    const igUrlInput = document.getElementById('igUrl');
+    const titleInput = document.getElementById('titleInput');
 
     // Leer posts desde Firebase
     let posts = [];
@@ -289,8 +290,11 @@
       if(window.instgrm) instgrm.Embeds.process();
     }
   </script>
+
 </body>
 </html>
+
+
 
 
 
