@@ -11,154 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --sand: #f6efe6;
-      --sea: #bfeaf5;
-      --accent: #ff7b6b;
-      --muted: #5f7d83;
-      --card: rgba(255,255,255,0.8);
-    }
-
-    body {
-      font-family: 'Times New Roman', Times, serif;
-      background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      color: black;
-      text-shadow: 0 1px 4px rgba(255,255,255,0.7);
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 12px;
-      padding: 12px 20px;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(5px);
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 6px;
-      object-fit: contain;
-    }
-
-    h1 {
-      font-size: 2.6em;
-      color: black;
-      margin: 0;
-      letter-spacing: 1px;
-    }
-
-    p.subtitle {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-      font-style: italic;
-    }
-
-    .controls {
-      padding: 12px 24px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .input, .btn {
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(20,60,70,0.08);
-      background: rgba(255,255,255,0.9);
-      font-family: inherit;
-    }
-
-    .input {
-      min-width: 260px;
-      flex: 1;
-    }
-
-    .btn {
-      cursor: pointer;
-      background: linear-gradient(90deg, var(--sea), #fff);
-      border: none;
-    }
-
-    main {
-      padding: 18px 24px 80px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 14px;
-      padding: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-      transition: transform .18s ease, box-shadow .18s ease;
-      position: relative;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.08);
-    }
-
-    .delete-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      padding: 4px 8px;
-      font-size: 12px;
-    }
-
-    .empty {
-      padding: 48px;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    footer {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-    }
-
-    .fab {
-      background: var(--accent);
-      color: white;
-      padding: 12px 16px;
-      border-radius: 999px;
-      box-shadow: 0 10px 24px rgba(255,123,107,0.18);
-      border: none;
-      cursor: pointer;
-    }
-
-    blockquote.instagram-media {
-      width: 100% !important;
-    }
-
-    @media (max-width:420px){
-      h1{font-size:22px}
-      .logo svg{width:48px;height:48px}
-    }
+    /* ... tu CSS actual ... (igual al que ya tenías) ... */
   </style>
 </head>
 
@@ -189,14 +42,12 @@
   <!-- Instagram Embed -->
   <script async defer src="https://www.instagram.com/embed.js"></script>
 
-  <!-- Firebase Realtime Database -->
+  <!-- Firebase scripts globales -->
   <script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js"></script>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-
+  <script>
+    // Configuración Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDJm3eRdd2gZe6eWBpb2AtcK1B654p-pts",
       authDomain: "mis-panoramas.firebaseapp.com",
@@ -207,8 +58,8 @@
       appId: "1:141101164885:web:4c1d4bf918e5e4b11667dc"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
@@ -219,8 +70,7 @@
     let posts = [];
 
     // Leer posts desde Firebase
-    const postsRef = ref(db, 'posts');
-    onValue(postsRef, (snapshot) => {
+    db.ref('posts').on('value', (snapshot) => {
       const data = snapshot.val();
       posts = data ? Object.values(data) : [];
       renderPosts();
@@ -228,16 +78,14 @@
 
     function savePosts() {
       const updates = {};
-      posts.forEach((post, index) => {
-        updates[index] = post;
-      });
-      set(postsRef, updates);
+      posts.forEach((post, index) => updates[index] = post);
+      db.ref('posts').set(updates);
     }
 
     addBtn.addEventListener('click', () => {
       const url = igUrlInput.value.trim();
       const title = titleInput.value.trim();
-      if(!url) return alert("Ingresa un enlace de Instagram");
+      if (!url) return alert("Ingresa un enlace de Instagram");
 
       posts.push({ permalink: url, title: title });
       savePosts();
@@ -247,8 +95,8 @@
       titleInput.value = '';
     });
 
-    grid.addEventListener('click', e => {
-      if(e.target.classList.contains('delete-btn')){
+    grid.addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete-btn')) {
         const index = e.target.dataset.index;
         posts.splice(index, 1);
         savePosts();
@@ -258,7 +106,7 @@
 
     function renderPosts() {
       grid.innerHTML = '';
-      if(posts.length === 0){
+      if (posts.length === 0) {
         empty.style.display = 'block';
         return;
       }
@@ -277,11 +125,13 @@
         grid.appendChild(card);
       });
 
-      if(window.instgrm) instgrm.Embeds.process();
+      if (window.instgrm) instgrm.Embeds.process();
     }
   </script>
 </body>
 </html>
+
+
 
 
 
