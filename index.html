@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Panoramas</title>
 
+  <!-- Iconos -->
   <link rel="icon" href="https://raw.githubusercontent.com/natashazk/Eventos-por-asistir/main/Palmera%20y%20gafas%20de%20sol.png" type="image/png">
   <link rel="shortcut icon" href="https://raw.githubusercontent.com/natashazk/Eventos-por-asistir/main/Palmera%20y%20gafas%20de%20sol.png" type="image/png">
-  
+
+  <!-- Fuente -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
 
   <style>
@@ -21,7 +23,7 @@
 
     body {
       font-family: 'Times New Roman', Times, serif;
-      background-image: url('https://raw.githubusercontent.com/natashazk/Eventos-por-asistir/main/fondo.jpg'); /* Imagen de fondo en tu repo */
+      background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -46,14 +48,12 @@
 
     .logo {
       width: 48px;
-      height: auto;
-      max-width: 48px;
-      border-radius: 6px;
+      height: 48px;
       object-fit: contain;
     }
 
     h1 {
-      font-size: 2.6em;
+      font-size: 2em;
       color: black;
       margin: 0;
       letter-spacing: 1px;
@@ -118,17 +118,6 @@
       box-shadow: 0 18px 40px rgba(0,0,0,0.08);
     }
 
-    .meta .title {
-      font-weight: 600;
-      color: #133642;
-    }
-
-    .small-note {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #354b52;
-    }
-
     .delete-btn {
       position: absolute;
       top: 10px;
@@ -170,7 +159,7 @@
 
     @media (max-width:420px){
       h1{font-size:22px}
-      .logo svg{width:48px;height:48px}
+      .logo{width:48px;height:48px}
     }
   </style>
 </head>
@@ -179,7 +168,7 @@
   <header>
     <img class="logo" src="https://raw.githubusercontent.com/natashazk/Eventos-por-asistir/main/Palmera%20y%20gafas%20de%20sol.png" alt="Logo">
     <div style="text-align:left;">
-      <h1 style="margin:0; font-size:2em;">Eventos por asistir</h1>
+      <h1 style="margin:0;">Eventos por asistir</h1>
       <p class="subtitle" style="margin:2px 0 0;">Un diario visual de mis panoramas 🌴✨</p>
     </div>
   </header>
@@ -199,20 +188,20 @@
     <button class="fab" id="themeBtn">Cambiar vibra</button>
   </footer>
 
+  <!-- Instagram Embed -->
   <script async defer src="https://www.instagram.com/embed.js"></script>
 
   <!-- Firebase SDK -->
   <script type="module">
-    // Importar funciones de Firebase
+    // Import Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-    // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDJm3eRdd2gZe6eWBpb2AtcK1B654p-pts",
       authDomain: "mis-panoramas.firebaseapp.com",
-      projectId: "mis-panoramas",
       databaseURL: "https://mis-panoramas-default-rtdb.firebaseio.com",
+      projectId: "mis-panoramas",
       storageBucket: "mis-panoramas.firebasestorage.app",
       messagingSenderId: "141101164885",
       appId: "1:141101164885:web:4c1d4bf918e5e4b11667dc"
@@ -222,19 +211,20 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // DOM
+    // Variables DOM
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
     const addBtn = document.getElementById('addBtn');
     const igUrlInput = document.getElementById('igUrl');
     const titleInput = document.getElementById('titleInput');
 
-    // Leer posts desde Firebase
+    // Posts
     let posts = [];
+
+    // Leer posts desde Firebase
     const postsRef = ref(db, 'posts');
-    onValue(postsRef, snapshot => {
-      const data = snapshot.val();
-      posts = data ? Object.values(data) : [];
+    onValue(postsRef, (snapshot) => {
+      posts = snapshot.val() ? Object.values(snapshot.val()) : [];
       renderPosts();
     });
 
@@ -272,7 +262,7 @@
       if(window.instgrm) instgrm.Embeds.process();
     }
 
-    // Agregar post
+    // Agregar nuevo post
     addBtn.addEventListener('click', () => {
       const url = igUrlInput.value.trim();
       const title = titleInput.value.trim();
@@ -280,8 +270,6 @@
 
       posts.push({ permalink: url, title: title });
       savePosts();
-      renderPosts();
-
       igUrlInput.value = '';
       titleInput.value = '';
     });
@@ -292,12 +280,13 @@
         const index = e.target.dataset.index;
         posts.splice(index, 1);
         savePosts();
-        renderPosts();
       }
     });
   </script>
 </body>
 </html>
+
+
 
 
 
