@@ -30,7 +30,6 @@
       margin: 0;
       padding: 0;
       text-align: center;
-      text-transform: none;
     }
 
     header {
@@ -187,13 +186,17 @@
     <button class="fab" id="themeBtn">Cambiar vibra</button>
   </footer>
 
+  <!-- Instagram Embed -->
   <script async defer src="https://www.instagram.com/embed.js"></script>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <!-- Firebase Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js"></script>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyDJm3eRdd2gZe6eWBpb2AtcK1B654p-pts",
       authDomain: "mis-panoramas.firebaseapp.com",
@@ -201,10 +204,11 @@
       projectId: "mis-panoramas",
       storageBucket: "mis-panoramas.firebasestorage.app",
       messagingSenderId: "141101164885",
-      appId: "1:141101164885:web:2d9fdb180394ee1b1667dc"
+      appId: "1:141101164885:web:4c1d4bf918e5e4b11667dc"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
     const grid = document.getElementById('grid');
     const empty = document.getElementById('empty');
@@ -213,6 +217,44 @@
     const titleInput = document.getElementById('titleInput');
 
     let posts = [];
+
+    // Leer posts desde Firebase
+    const postsRef = ref(db, 'posts');
+    onValue(postsRef, (snapshot) => {
+      const data = snapshot.val();
+      posts = data ? Object.values(data) : [];
+      renderPosts();
+    });
+
+    function savePosts() {
+      const updates = {};
+      posts.forEach((post, index) => {
+        updates[index] = post;
+      });
+      set(postsRef, updates);
+    }
+
+    addBtn.addEventListener('click', () => {
+      const url = igUrlInput.value.trim();
+      const title = titleInput.value.trim();
+      if(!url) return alert("Ingresa un enlace de Instagram");
+
+      posts.push({ permalink: url, title: title });
+      savePosts();
+      renderPosts();
+
+      igUrlInput.value = '';
+      titleInput.value = '';
+    });
+
+    grid.addEventListener('click', e => {
+      if(e.target.classList.contains('delete-btn')){
+        const index = e.target.dataset.index;
+        posts.splice(index, 1);
+        savePosts();
+        renderPosts();
+      }
+    });
 
     function renderPosts() {
       grid.innerHTML = '';
@@ -237,49 +279,11 @@
 
       if(window.instgrm) instgrm.Embeds.process();
     }
-
-    // Leer posts desde Firebase
-    db.ref('posts').on('value', snapshot => {
-      const data = snapshot.val();
-      posts = data ? Object.values(data) : [];
-      renderPosts();
-    });
-
-    // Guardar posts en Firebase
-    function savePosts() {
-      const updates = {};
-      posts.forEach((post, index) => {
-        updates[index] = post;
-      });
-      db.ref('posts').set(updates);
-    }
-
-    // Agregar post
-    addBtn.addEventListener('click', () => {
-      const url = igUrlInput.value.trim();
-      const title = titleInput.value.trim();
-      if(!url) return alert("Ingresa un enlace de Instagram");
-
-      posts.push({ permalink: url, title: title });
-      savePosts();
-      renderPosts();
-
-      igUrlInput.value = '';
-      titleInput.value = '';
-    });
-
-    // Eliminar post
-    grid.addEventListener('click', e => {
-      if(e.target.classList.contains('delete-btn')){
-        const index = e.target.dataset.index;
-        posts.splice(index, 1);
-        savePosts();
-        renderPosts();
-      }
-    });
   </script>
 </body>
 </html>
+
+
 
 
 
